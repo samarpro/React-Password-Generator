@@ -1,17 +1,23 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import './App.css'
 
 function App() {
   const [LenghtPass,setLenghtPass]=useState(8)
   const [layerChar,setLayerChar]=useState(false)
   const [layerNum,setLayerNum]=useState(false)
-
   const [password,setPassword] = useState("")
+  const passDOM = useRef(null)
 
   console.log("Rendered")
   useEffect(()=>{
     GeneratePassword(layerNum,layerChar)
   },[layerNum,layerChar,LenghtPass])
+
+  const copyPass = useCallback(()=>{
+    console.log(passDOM)
+    passDOM.current?.select();
+    window.navigator.clipboard.writeText(password)
+  })
 
   const GeneratePassword = useCallback((layerNum,LayerChar)=>{
     console.log("running")
@@ -29,8 +35,8 @@ function App() {
     <>
       <div className="m-8 rounded p-5 bg-slate-400">
         <label className='flex align-middle justify-center '>
-          <input type="text" className='w-full rounded-xl hover:bg-slate-100 focus:outline-red-100 px-3' readOnly value={password}/>
-          <button className='text-lg ml-4 bg- px-5 py-3 rounded-lg bg-blue-700 text-white' onClick={()=>setLayerNum((prev)=>false)}>Copy</button>
+          <input type="text" className='w-full rounded-xl hover:bg-slate-100 focus:outline-red-100 px-3' readOnly value={password} ref={passDOM}/>
+          <button className='text-lg ml-4 bg- px-5 py-3 rounded-lg bg-blue-700 text-white' onClick={copyPass}>Copy</button>
         </label>
       </div>
       <div className="input-group space-x-5">
